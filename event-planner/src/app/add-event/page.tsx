@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect } from 'react';
-
+import PreLoader from '../preloader/page';
 export default function AddEventPage() {
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function AddEventPage() {
     }
   }, [loading, user, router]);
 
-  if (loading) return <p>Завантаження...</p>;
+ if (loading) return <PreLoader />; 
 
   if (!user) return null;
 

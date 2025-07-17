@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 export default function EventManager() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [view, setView] = useState<'list' | 'calendar'>('list');
-  const [importanceFilter, setImportanceFilter] = useState('');
+  const [importanceFilter, setImportanceFilter] = useState('вся важливість');
   const [searchQuery, setSearchQuery] = useState('');
   const [userId, setUserId] = useState<string | null>(null);
   const router = useRouter();
@@ -40,9 +40,11 @@ export default function EventManager() {
   }, [userId]);
 
   const filteredEvents = events.filter((event) => {
-    const matchesImportance = importanceFilter
-      ? event.importance === importanceFilter
-      : true;
+    const importance = event.importance?.toLowerCase().trim() ?? '';
+    const filterValue = importanceFilter.toLowerCase().trim();
+
+    const matchesImportance =
+      filterValue === 'вся важливість' || importance === filterValue;
 
     const matchesSearch =
       searchQuery === '' ||
@@ -65,12 +67,12 @@ export default function EventManager() {
         <select
           value={importanceFilter}
           onChange={(e) => setImportanceFilter(e.target.value)}
-          className="border rounded px-2 py-1"
+          className="border rounded px-2 py-1 bg-gray-600 text-shadow-cyan-50"
         >
-          <option value="">Уся важливість</option>
-          <option value="normal">Звичайна</option>
-          <option value="important">Важлива</option>
-          <option value="critical">Критична</option>
+          <option value="вся важливість">Уся важливість</option>
+          <option value="звичайна">Звичайна</option>
+          <option value="важлива">Важлива</option>
+          <option value="критична">Критична</option>
         </select>
 
         <input
@@ -91,7 +93,7 @@ export default function EventManager() {
                 {event.description || 'Без опису'}
               </p>
               <p className="text-sm">
-                📅 {dayjs(event.datetime.toDate()).format('YYYY-MM-DD HH:mm')}
+                {dayjs(event.datetime.toDate()).format('YYYY-MM-DD HH:mm')}
               </p>
               <p className="text-sm"> {event.importance}</p>
             </li>
@@ -112,9 +114,9 @@ export default function EventManager() {
           eventClassNames={(arg) => {
             const importance = arg.event.extendedProps.importance;
             switch (importance) {
-              case 'critical':
+              case 'критична':
                 return ['bg-red-500', 'text-white'];
-              case 'important':
+              case 'важлива':
                 return ['bg-yellow-400', 'text-black'];
               default:
                 return ['bg-green-400', 'text-black'];

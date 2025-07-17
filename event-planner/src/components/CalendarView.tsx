@@ -43,7 +43,7 @@ useEffect(() => {
   return (
     <div className="max-w-4xl mx-auto mt-8">
       <select
-        className="mb-4 p-2 border rounded"
+        className="mb-4 p-2 border rounded text-shadow-teal-400"
         value={importanceFilter}
         onChange={(e) => setImportanceFilter(e.target.value as any)}
       >

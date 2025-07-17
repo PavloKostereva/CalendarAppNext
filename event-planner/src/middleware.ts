@@ -1,19 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// export function middleware(req: NextRequest) {
-//   const token = req.cookies.get('__session')?.value;
-//   const protectedPaths = ['/add-event', '/events'];
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get('__session')?.value;
 
-//   if (protectedPaths.some(path => req.nextUrl.pathname.startsWith(path)) && !token) {
-//     return NextResponse.redirect(new URL('/login', req.url));
-//   }
+  const protectedPaths = ['/dashboard', '/settings'];
+  const isProtected = protectedPaths.some(path =>
+    req.nextUrl.pathname.startsWith(path)
+  );
 
-//   return NextResponse.next();
-// }
+  if (isProtected && !token) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 
-// export const config = {
-//   matcher: ['/add-event', '/events/:path*'],
-// };
-export function middleware() {
-  return NextResponse.next();
-}
+  return NextResponse.next(); }
+
+export const config = {
+  matcher: ['/add-event', '/settings/:path*'],
+};
